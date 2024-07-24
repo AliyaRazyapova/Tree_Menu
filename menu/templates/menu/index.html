@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Меню</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="sidebar">
+        {% load menu_tags %}
+
+        {% if menu %}
+            <div class="menu-content" id="default-menu">
+                {% draw_menu menu.name %}
+            </div>
+        {% else %}
+            <p>Меню по умолчанию не найдено.</p>
+        {% endif %}
+
+        <div class="menu-selector">
+            <label for="menu-select">Выберите меню:</label>
+            <select id="menu-select" onchange="showMenu(this.value)">
+                <option value="default-menu">-- Выберите --</option>
+                {% for menu in menus %}
+                    <option value="menu-{{ menu.name }}">{{ menu.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="menu-container">
+            {% for menu in menus %}
+                <div id="menu-{{ menu.name }}" class="menu-content" style="display: none;">
+                    {% draw_menu menu.name %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function showMenu(menuId) {
+            document.querySelectorAll('.menu-content').forEach(function(element) {
+                element.style.display = 'none';
+            });
+
+            if (menuId) {
+                document.getElementById(menuId).style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
